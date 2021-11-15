@@ -1,0 +1,59 @@
+{% extends "base.html" %}{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <h3 align="center">Rejestracja</h3>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Podaj swój adres email"
+        />
+    </div>
+    <div class="form-group">
+        <label for="firstName">Imię</label>
+        <input
+                type="text"
+                class="form-control"
+                id="firstName"
+                name="firstName"
+                placeholder="Podaj swoje imię"
+        />
+    </div>
+    <div class="form-group">
+        <label for="secondName">Nazwisko</label>
+        <input
+                type="text"
+                class="form-control"
+                id="secondName"
+                name="secondName"
+                placeholder="Podaj swoje nazwisko"
+        />
+    </div>
+    <div class="form-group">
+        <label for="password1">Hasło</label>
+        <input
+                type="password"
+                class="form-control"
+                id="password1"
+                name="password1"
+                placeholder="Podaj hasło"
+        />
+    </div>
+    <div class="form-group">
+        <label for="password2">Potwierdź hasło</label>
+        <input
+                type="password"
+                class="form-control"
+                id="password2"
+                name="password2"
+                placeholder="Podaj hasło jeszcze raz"
+        />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+</form>
+{% endblock %}
