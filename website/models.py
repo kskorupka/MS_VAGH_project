@@ -19,6 +19,5 @@ class User(db.Model, UserMixin):
     hasło = db.Column(db.String(150))
     imię = db.Column(db.String(150))
     nazwisko = db.Column(db.String(150))
-    notes = db.relationship('Note')  # each time user adds the note -> create this relationship
 
 # TODO: Add tables to your database (time: 1:29:10)
