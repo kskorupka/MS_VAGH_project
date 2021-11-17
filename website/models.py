@@ -1,4 +1,4 @@
-from . import db
+from website import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
@@ -16,8 +16,8 @@ class Note(db.Model):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)  # setting primary key
     email = db.Column(db.String(150), unique=True)  # each user has a unique email
-    hasło = db.Column(db.String(150))
-    imię = db.Column(db.String(150))
-    nazwisko = db.Column(db.String(150))
+    password = db.Column(db.String(150))
+    name = db.Column(db.String(150))
+    surname = db.Column(db.String(150))
 
 # TODO: Add tables to your database (time: 1:29:10)
