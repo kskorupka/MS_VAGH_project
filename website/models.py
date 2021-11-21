@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(150))
     surname = db.Column(db.String(150))
 
+
 class History(db.Model):
     historyID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('user.userID'))
