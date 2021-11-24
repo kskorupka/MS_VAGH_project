@@ -6,6 +6,7 @@ from . import db
 
 auth = Blueprint('auth', __name__)
 
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -52,11 +53,10 @@ def sign_up():
             flash('Hasło powinno składać się z 8 znaków oraz zawierać co najmniej jedną liczbę', category='error')
         else:
             # add user to a database
-            new_user = User(email=email, imię=firstName, nazwisko=secondName, hasło=generate_password_hash(password1, method='sha256'))
+            new_user = User(email=email, name=firstName, surname=secondName, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
             flash('Konto zostało utworzone poprawnie', category='success')
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html")
-
