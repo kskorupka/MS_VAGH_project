@@ -3,7 +3,7 @@ from flask_login import UserMixin
 
 
 class User(db.Model, UserMixin):
-    userID = db.Column(db.Integer, primary_key=True)  # setting primary key
+    id = db.Column(db.Integer, primary_key=True)  # setting primary key
     email = db.Column(db.String(150), unique=True)  # each user has a unique email
     phone = db.Column(db.String(150))
     password = db.Column(db.String(150))
@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
 
 class History(db.Model):
     historyID = db.Column(db.Integer, primary_key=True)
-    userID = db.Column(db.Integer, db.ForeignKey('user.userID'))
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     locationID = db.Column(db.Integer, db.ForeignKey('location.locationID'))
     fromDate = db.Column(db.DateTime(timezone=True))
     toDate = db.Column(db.DateTime(timezone=True))
@@ -30,7 +30,7 @@ class Location(db.Model):
 
 class Reservation(db.Model):
     reservationID = db.Column(db.Integer, primary_key=True)
-    userID = db.Column(db.Integer, db.ForeignKey('user.userID'))
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     itemID = db.Column(db.Integer, db.ForeignKey('item.itemID'))
     fromDate = db.Column(db.DateTime(timezone=True))
     toDate = db.Column(db.DateTime(timezone=True))
