@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block title %}Wypożycz{% endblock %} {% block
+content %}
+    <form method="post">
+    <h3 align="center">Wybierz lokalizację, w której zostawiasz sprzęt</h3>
+        <label for="type">Lokalizacje: </label>
+        <select name="type" id="location">
+            <option value="" selected disabled hidden>Wybierz lokalizację</option> <!-- placeholder -->
+            {% for location in locations %}
+                <option value="{{ location.id }}">{{ location.name }}</option>
+        </select>
+    <input type="submit" value="Zwróć sprzęt" id="submit" style="display: none;">
+    </form>
+{% endblock %}

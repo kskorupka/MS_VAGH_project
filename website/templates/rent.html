@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block title %}Wypożycz{% endblock %} {% block
+content %}
+    <form method="post">
+        <h3 align="center">Wybierz przedmiot do wypożyczenia</h3>
+        <label for="type">Sprzęt: </label>
+        <select name="type" onchange="showOffers(this.value)" id="type">
+            <option value="" selected disabled hidden>Wybierz pojazd</option> <!-- placeholder -->
+            <option value="Rower" type="item">Rower</option>
+            <option value="Hulajnoga" type="item">Hulajnoga</option>
+            <option value="Deskorolka" type="item">Deskorolka</option>
+        </select>
+
+{#        <h2>{{ imie }}</h2>#}
+
+        <div style="display: none;" id="bikes_available">
+            <label for="bikes_available">Rower: </label>
+            <select onchange="allowSubmit()" name="bikes_available">
+                <option value="" selected disabled hidden>Wybierz rower</option>
+{#                {% bikes =  %}#}
+                {% for bike in bikes %}
+                    <option value="{{bike.id}}">{{bike.location.name}}</option>
+                {% endfor %}
+{#                <option value="bike1">Bike 1</option>#}
+{#                <option value="bike2">Bike 2</option>#}
+{#                <option value="bike3">Bike 3</option>#}
+{#                <option value="bike4">Bike 4</option>#}
+{#                <option value="bike5">Bike 5</option>#}
+            </select>
+        </div>
+
+        <div style="display: none;" id="scooters_available">
+            <label for="scooters_available">Hulajnoga: </label>
+            <select onchange="allowSubmit()" name="scooters_available">
+                <option value="" selected disabled hidden>Wybierz hulajnogę</option>
+                <option value="scooter1">Scooter 1</option>
+                <option value="scooter2">Scooter 2</option>
+                <option value="scooter3">Scooter 3</option>
+                <option value="scooter4">Scooter 4</option>
+                <option value="scooter5">Scooter 5</option>
+            </select>
+        </div>
+
+        <input type="submit" value="Wypożycz" id="submit" style="display: none;">
+    </form>
+
+    <script>
+        function showOffers(value) {
+            if (value === "Rower") {
+                document.getElementById("bikes_available").style.display = "block";
+                document.getElementById("scooters_available").style.display = "none";
+            } else if (value === "Hulajnoga") {
+                document.getElementById("bikes_available").style.display = "none";
+                document.getElementById("scooters_available").style.display = "block";
+            } else if (value === "Deskorolka") {
+            }
+        }
+
+        function allowSubmit() {
+            document.getElementById("submit").style.display = "block";
+        }
+    </script>
+{% endblock %}
