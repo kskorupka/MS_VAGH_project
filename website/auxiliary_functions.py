@@ -6,7 +6,7 @@ def get_bikes(items, locations):
     bikes = list(dict())
     bike_count = 1
     for item in items:
-        if not check_if_item_is_available(item.itemID):
+        if check_if_item_is_available(item.itemID):
             for location in locations:
                 if item.locationID == location.locationID:
                     if item.type == 'Rower':
@@ -20,7 +20,7 @@ def get_scooters(items, locations):
     scooters = list(dict())
     scooter_count = 1
     for item in items:
-        if not check_if_item_is_available(item.itemID):
+        if check_if_item_is_available(item.itemID):
             for location in locations:
                 if item.locationID == location.locationID:
                     if item.type == 'Hulajnoga':
@@ -34,7 +34,7 @@ def get_skateboards(items, locations):
     skateboards = list(dict())
     skateboard_count = 1
     for item in items:
-        if not check_if_item_is_available(item.itemID):
+        if check_if_item_is_available(item.itemID):
             for location in locations:
                 if item.locationID == location.locationID:
                     if item.type == 'Deskorolka':
@@ -72,5 +72,5 @@ def check_if_item_is_available(item_id):
 
     for reservation in reservations:
         if reservation.itemID == item_id:
-            return True
-    return False
+            return False
+    return True
