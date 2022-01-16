@@ -5,6 +5,9 @@ from sqlalchemy import engine
 
 class testForUser(TestCase):
 
+    def testContains_a_number(self):
+        pass
+
     def testGetBikes(self):
         from ..models import Location, Item
 
@@ -20,4 +23,17 @@ class testForUser(TestCase):
 
         # self.assertEqual(bikes, correct_bikes)
 
+    def testGet_skateboards(self):
+        pass
 
+    def testGet_scooters(self):
+        pass
+
+    def testIs_available(self):
+        pass
+
+    def testPerform_reservation(self):
+        pass
+
+    def testCheck_if_user_has_reservation(self):
+        pass
