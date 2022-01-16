@@ -1,13 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from sqlalchemy import select
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from .auxiliary_functions import contains_a_number
 from flask_login import login_user, login_required, logout_user, current_user
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import functions
-
+from datetime import datetime as date
 
 auth = Blueprint('auth', __name__)
 
@@ -43,8 +40,8 @@ def logout():
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
-        firstName = request.form.get('firstName')
-        secondName = request.form.get('secondName')
+        first_name = request.form.get('firstName')
+        second_name = request.form.get('secondName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         phone = request.form.get('phoneNumber')
@@ -54,9 +51,9 @@ def sign_up():
             flash('Konto już istnieje.', category='error')
         elif len(email) < 4 or email.find("@") == -1:
             flash('Niepoprawny email', category='error')
-        elif len(firstName) < 3 or len(secondName) < 3:
+        elif len(first_name) < 3 or len(second_name) < 3:
             flash('Imię oraz nazwisko powinno być dłuższe niż 1 litera', category='error')
-        elif contains_a_number(firstName) == True or contains_a_number(secondName) == True:
+        elif contains_a_number(first_name) == True or contains_a_number(second_name) == True:
             flash('Imię oraz nazwisko nie powinno zawierać liczb', category='error')
         elif password1 != password2:
             flash('Hasła nie są takie same', category='error')
@@ -64,7 +61,8 @@ def sign_up():
             flash('Hasło powinno składać się z 8 znaków oraz zawierać co najmniej jedną liczbę', category='error')
         else:
             # add user to a database
-            new_user = User(email=email, password=generate_password_hash(password1, method='sha256'), name=firstName, surname=secondName, phone=phone)
+            new_user = User(email=email, password=generate_password_hash(password1, method='sha256'), name=first_name,
+                            surname=second_name, phone=phone)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
@@ -77,20 +75,80 @@ def sign_up():
 @auth.route('/rent', methods=['GET', 'POST'])
 @login_required
 def rent():
-    from .models import Item, Location
-    # bikes = select(functions.array_agg(Item.))
-    # bikes = select(Item.type, Location.name).where(Item.type == "Rower")
-    # bike_rows = Item.select().where(Item.type.__eq__('Rower'))
-    bikes = list(dict())
-    # bike_rows = db.execute(select(Item))
-    # for itemID, locationID, type, weight, color in bike_rows:
-    #     location = Location.select().where(Location.locationID.__eq__(locationID))
-    #     bikes.append({'itemID': itemID, 'location' : {'name': location.name}})
+    from .models import Item, Location, Reservation
+    from .auxiliary_functions import get_bikes, get_scooters, get_skateboards
 
+    locations = Location.query.all()
+    items = Item.query.all()
 
+    bikes = get_bikes(items, locations)
+    scooters = get_scooters(items, locations)
+    skateboards = get_skateboards(items, locations)
 
-    bikes.append({'itemID' : 1, 'location' : {'name': 'Kapitol'}})
     if request.method == 'POST':
-        flash('Wypożyczono sprzęt')
-    return render_template("rent.html", user=current_user, bikes=bikes)
 
+        item_type = request.form.get('type')
+        user_id = current_user.id
+
+        if item_type == 'Rower':
+            item_id = request.form.get('bikes_available')
+        elif item_type == 'Hulajnoga':
+            item_id = request.form.get('scooters_available')
+        else:
+            item_id = request.form.get('skateboards_available')
+
+        reservations = Reservation.query.all()
+        new_reservation = Reservation(reservationID=len(reservations), userID=user_id, itemID=item_id,
+                                      fromDate=date.now(), toDate=date.now())
+        db.session.add(new_reservation)
+        db.session.commit()
+        flash('Wypożyczono sprzęt')
+    return render_template("rent.html", user=current_user, bikes=bikes, scooters=scooters, skateboards=skateboards)
+
+
+@auth.route('/return', methods=['GET', 'POST'])
+@login_required
+def return_item():
+    # TODO delete reservation
+    # https://www.youtube.com/watch?v=1nxzOrLWiic&ab_channel=TechWithTim
+    # 1)  Go
+    # to
+    # user.html and add
+    # the
+    # below
+    # code:
+    # < form
+    # action = "{{ url_for('delete') }}" >
+    #          < input
+    # type = "submit"
+    # value = "Delete my record" >
+    #         < / form >
+    #
+    #             2)  Add
+    # the
+    # below
+    # snippet
+    # for delete module in your flask file:
+    #     @
+    #     app.route("/delete")
+    #
+    # def delete():
+    #     if "user" in session and "email" in session:
+    #         user = session["user"]
+    #         email = session["email"]
+    #         users.query.filter_by(name=user).delete()
+    #         users.query.filter_by(email=email).delete()
+    #         db.session.commit()
+    #         flash("Record deleted successfully!")
+    #     elif "user" in session and "email" not in session:
+    #         user = session["user"]
+    #         if not users.query.filter_by(name=user).first():
+    #             flash("Unable to delete since there is no record found!")
+    #         else:
+    #             users.query.filter_by(name=user).delete()
+    #             db.session.commit()
+    #             flash("Record deleted successfully!")
+    #     else:
+    #         flash("Unable to delete record!")
+    #     return redirect(url_for("user"))
+    return render_template("return.html", user=current_user)
