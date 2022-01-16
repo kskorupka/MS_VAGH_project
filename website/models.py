@@ -15,6 +15,7 @@ class History(db.Model):
     historyID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     locationID = db.Column(db.Integer, db.ForeignKey('location.locationID'))
+    itemID = db.Column(db.Integer, db.ForeignKey('item.itemID'))
     fromDate = db.Column(db.DateTime(timezone=True))
     toDate = db.Column(db.DateTime(timezone=True))
 
@@ -66,4 +67,5 @@ class Admin(db.Model):
 
 class Announcement(db.Model):
     announcementID = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
     content = db.Column(db.String)

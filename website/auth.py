@@ -77,11 +77,12 @@ def rent():
     from .models import Item, Location, Reservation
     from .auxiliary_functions import get_bikes, get_scooters, get_skateboards, perform_reservation
 
+    reservations = Reservation.query.all()
     locations = Location.query.all()
     items = Item.query.all()
-    bikes = get_bikes(items, locations)
-    scooters = get_scooters(items, locations)
-    skateboards = get_skateboards(items, locations)
+    bikes = get_bikes(items, locations, reservations)
+    scooters = get_scooters(items, locations, reservations)
+    skateboards = get_skateboards(items, locations, reservations)
 
     if request.method == 'POST':
 
@@ -103,7 +104,7 @@ def rent():
 @auth.route('/return', methods=['GET', 'POST'])
 @login_required
 def return_item():
-    from .auxiliary_functions import check_if_user_has_reservation
+    from .auxiliary_functions import check_if_user_has_reservation, add_to_history
     from .models import Reservation, Location, Item
 
     user_id = current_user.id
@@ -119,6 +120,8 @@ def return_item():
             reservation = Reservation.query.filter_by(userID=user_id).first()
             location_id = request.form.get('locations')
             item = Item.query.filter_by(itemID=reservation.itemID).first()
+
+            add_to_history(reservation, location_id)
 
             item.locationID = location_id
             db.session.commit()
@@ -139,3 +142,11 @@ def report():
 
         flash('Dziękujemy za zgłodzenie problemu')
     return render_template('report.html', user=current_user)
+
+
+@auth.route('/announcement')
+@login_required
+def announcement():
+    from .models import Announcement
+    announcements = Announcement.query.order_by(Announcement.announcementID.desc()).all()
+    return render_template("announcements.html", user=current_user, announcements=announcements)
