@@ -1,4 +1,9 @@
 {% extends "base.html" %} {% block title %}Zwróć sprzęt{% endblock %} {% block
 content %}
-
+    <form method="POST">
+        <textarea name="report" id="report" class="form-control"></textarea>
+        <div align="center">
+            <button type="submit" class="btn btn-primary">Wyślij zgłoszenie</button>
+        </div>
+    </form>
 {% endblock %}

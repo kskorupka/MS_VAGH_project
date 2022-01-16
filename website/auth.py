@@ -103,7 +103,6 @@ def rent():
 @auth.route('/return', methods=['GET', 'POST'])
 @login_required
 def return_item():
-    # TODO delete reservation
     from .auxiliary_functions import check_if_user_has_reservation
     from .models import Reservation, Location, Item
 
@@ -135,4 +134,8 @@ def return_item():
 @auth.route('/report', methods=['GET', 'POST'])
 @login_required
 def report():
+    if request.method == 'POST':
+        report = request.form.get('report')
+
+        flash('Dziękujemy za zgłodzenie problemu')
     return render_template('report.html', user=current_user)

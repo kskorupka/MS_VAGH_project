@@ -10,16 +10,13 @@ class User(db.Model, UserMixin):
     surname = db.Column(db.String(150))
     phone = db.Column(db.String(150))
 
+
 class History(db.Model):
     historyID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     locationID = db.Column(db.Integer, db.ForeignKey('location.locationID'))
     fromDate = db.Column(db.DateTime(timezone=True))
     toDate = db.Column(db.DateTime(timezone=True))
-    # TODO
-
-    distance = db.Column(db.Float)
-    travelTime = db.Column(db.Date)
 
 
 class Location(db.Model):
@@ -34,8 +31,6 @@ class Reservation(db.Model):
     userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     itemID = db.Column(db.Integer, db.ForeignKey('item.itemID'))
     fromDate = db.Column(db.DateTime(timezone=True))
-    # TODO
-    toDate = db.Column(db.DateTime(timezone=True))
 
 
 class Item(db.Model):
@@ -53,3 +48,22 @@ class Damaged(db.Model):
     fromDate = db.Column(db.DateTime(timezone=True))
     toDate = db.Column(db.DateTime(timezone=True))
     repairing = db.Column(db.Boolean)
+
+
+class Report(db.Model):
+    reportID = db.Column(db.Integer, primary_key=True)
+    report = db.Column(db.String)
+
+
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
+    password = db.Column(db.String(150))
+    name = db.Column(db.String(150))
+    surname = db.Column(db.String(150))
+    phone = db.Column(db.String(150))
+
+
+class Announcement(db.Model):
+    announcementID = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String)

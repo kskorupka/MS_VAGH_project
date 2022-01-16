@@ -60,7 +60,7 @@ def perform_reservation(user_id, reservations, item_id, ):
         flash('Już masz wypożyczony sprzęt. Aby wypożyczyć następny, zwróć obecnie posiadany sprzęt.')
     else:
         new_reservation = Reservation(reservationID=len(reservations) + 1, userID=user_id, itemID=item_id,
-                                      fromDate=date.now(), toDate=date.now())
+                                      fromDate=date.now())
         db.session.add(new_reservation)
         db.session.commit()
         flash('Wypożyczono sprzęt')
