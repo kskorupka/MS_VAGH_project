@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from .auxiliary_functions import contains_a_number
 from flask_login import login_user, login_required, logout_user, current_user
-from datetime import datetime as date
 
 auth = Blueprint('auth', __name__)
 
@@ -76,11 +75,10 @@ def sign_up():
 @login_required
 def rent():
     from .models import Item, Location, Reservation
-    from .auxiliary_functions import get_bikes, get_scooters, get_skateboards
+    from .auxiliary_functions import get_bikes, get_scooters, get_skateboards, perform_reservation
 
     locations = Location.query.all()
     items = Item.query.all()
-
     bikes = get_bikes(items, locations)
     scooters = get_scooters(items, locations)
     skateboards = get_skateboards(items, locations)
@@ -89,6 +87,7 @@ def rent():
 
         item_type = request.form.get('type')
         user_id = current_user.id
+        reservations = Reservation.query.all()
 
         if item_type == 'Rower':
             item_id = request.form.get('bikes_available')
@@ -97,12 +96,7 @@ def rent():
         else:
             item_id = request.form.get('skateboards_available')
 
-        reservations = Reservation.query.all()
-        new_reservation = Reservation(reservationID=len(reservations), userID=user_id, itemID=item_id,
-                                      fromDate=date.now(), toDate=date.now())
-        db.session.add(new_reservation)
-        db.session.commit()
-        flash('Wypożyczono sprzęt')
+        perform_reservation(user_id, reservations, item_id)
     return render_template("rent.html", user=current_user, bikes=bikes, scooters=scooters, skateboards=skateboards)
 
 
@@ -110,45 +104,35 @@ def rent():
 @login_required
 def return_item():
     # TODO delete reservation
-    # https://www.youtube.com/watch?v=1nxzOrLWiic&ab_channel=TechWithTim
-    # 1)  Go
-    # to
-    # user.html and add
-    # the
-    # below
-    # code:
-    # < form
-    # action = "{{ url_for('delete') }}" >
-    #          < input
-    # type = "submit"
-    # value = "Delete my record" >
-    #         < / form >
-    #
-    #             2)  Add
-    # the
-    # below
-    # snippet
-    # for delete module in your flask file:
-    #     @
-    #     app.route("/delete")
-    #
-    # def delete():
-    #     if "user" in session and "email" in session:
-    #         user = session["user"]
-    #         email = session["email"]
-    #         users.query.filter_by(name=user).delete()
-    #         users.query.filter_by(email=email).delete()
-    #         db.session.commit()
-    #         flash("Record deleted successfully!")
-    #     elif "user" in session and "email" not in session:
-    #         user = session["user"]
-    #         if not users.query.filter_by(name=user).first():
-    #             flash("Unable to delete since there is no record found!")
-    #         else:
-    #             users.query.filter_by(name=user).delete()
-    #             db.session.commit()
-    #             flash("Record deleted successfully!")
-    #     else:
-    #         flash("Unable to delete record!")
-    #     return redirect(url_for("user"))
-    return render_template("return.html", user=current_user)
+    from .auxiliary_functions import check_if_user_has_reservation
+    from .models import Reservation, Location, Item
+
+    user_id = current_user.id
+    reservations = Reservation.query.all()
+    locations = Location.query.all()
+
+    if not check_if_user_has_reservation(user_id, reservations):
+        flash('Nie wypożyczyłeś żadnego sprzętu.')
+        return render_template("home.html", user=current_user)
+
+    else:
+        if request.method == 'POST':
+            reservation = Reservation.query.filter_by(userID=user_id).first()
+            location_id = request.form.get('locations')
+            item = Item.query.filter_by(itemID=reservation.itemID).first()
+
+            item.locationID = location_id
+            db.session.commit()
+
+            Reservation.query.filter_by(userID=user_id).delete()
+            db.session.commit()
+
+            flash('Zwrócono sprzęt')
+            return render_template('home.html', user=current_user)
+        return render_template("return.html", user=current_user, locations=locations)
+
+
+@auth.route('/report', methods=['GET', 'POST'])
+@login_required
+def report():
+    return render_template('report.html', user=current_user)

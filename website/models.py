@@ -16,6 +16,8 @@ class History(db.Model):
     locationID = db.Column(db.Integer, db.ForeignKey('location.locationID'))
     fromDate = db.Column(db.DateTime(timezone=True))
     toDate = db.Column(db.DateTime(timezone=True))
+    # TODO
+
     distance = db.Column(db.Float)
     travelTime = db.Column(db.Date)
 
@@ -32,6 +34,7 @@ class Reservation(db.Model):
     userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     itemID = db.Column(db.Integer, db.ForeignKey('item.itemID'))
     fromDate = db.Column(db.DateTime(timezone=True))
+    # TODO
     toDate = db.Column(db.DateTime(timezone=True))
 
 
