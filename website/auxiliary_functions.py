@@ -142,6 +142,8 @@ def add_report(user_id, description):
     reports = Report.query.all()
     new_report = Report(reportID=len(reports) + 1, userID=user_id, description=str(description))
 
+    for report in reports:
+        print(type(report))
     db.session.add(new_report)
     db.session.commit()
 
