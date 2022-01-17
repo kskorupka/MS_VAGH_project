@@ -51,11 +51,6 @@ class Damaged(db.Model):
     repairing = db.Column(db.Boolean)
 
 
-class Report(db.Model):
-    reportID = db.Column(db.Integer, primary_key=True)
-    report = db.Column(db.String)
-
-
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
@@ -69,3 +64,9 @@ class Announcement(db.Model):
     announcementID = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     content = db.Column(db.String)
+
+
+class Report(db.Model):
+    reportID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'))
+    description = db.Column(db.String)
