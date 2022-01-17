@@ -171,7 +171,7 @@ def report():
             flash('Nie możesz wysłać pustego zgłoszenia')
         else:
             add_report(user_id=current_user.id, description=new_report)
-            flash('Dziękujemy za zgłodzenie problemu')
+            flash('Dziękujemy za zgłoszenie problemu')
             return render_template("home.html", user=current_user)
     return render_template('report.html', user=current_user)
 
