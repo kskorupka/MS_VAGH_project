@@ -65,3 +65,5 @@ zgłoszenie". Uwaga, zgłoszenie nie może być puste.
 <b> 8. Wylogowanie </b>
 
 Aby wylogować się należy wcisnąć przycisk "Wyloguj się".
+
+![](website/images/login.png)
