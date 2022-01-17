@@ -8,6 +8,9 @@ DB_NAME = "VAGH_database.db"
 
 
 def create_app():
+    """
+    :return: created app
+    """
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
@@ -29,12 +32,20 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(id):
+        """
+        :param id: user's id
+        :return: returns user's id in DataBase
+        """
         return User.query.get(int(id))
 
     return app
 
 
 def create_database(app):
+    """
+    :param app: app to create a DataBase in
+    This function creates DataBase
+    """
     if not path.exists('website/' + DB_NAME):
         db.create_all(app=app)
         print('Created Database!')

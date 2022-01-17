@@ -12,8 +12,9 @@ def contains_a_character(s):
     :param s: text to check
     :return: True, if text contains any characters
     """
-    if re.match("[A-Za-z]+"):
-        return True
+    for i in s:
+        if re.match('[A-Za-z]', i):
+            return True
     return False
 
 
@@ -154,3 +155,36 @@ def get_rows(table):
     :return: list of rows from table
     """
     return table.query.all()
+
+
+def check_if_data_is_correct(email, first_name, second_name, password1, password2, phone):
+    """
+    :param email: user's email
+    :param first_name: user's name
+    :param second_name: user's surname
+    :param password1: user's password
+    :param password2: user's password (to check)
+    :param phone: user's phone number
+    :return: True, if all data meets the requirements
+    """
+    from flask import flash
+
+    if len(email) < 4 or email.find("@") == -1:
+        flash('Niepoprawny email', category='error')
+        return False
+    elif len(first_name) < 3 or len(second_name) < 3:
+        flash('Imię oraz nazwisko powinno być dłuższe niż 1 litera', category='error')
+        return False
+    elif contains_a_number(first_name) == True or contains_a_number(second_name) == True:
+        flash('Imię oraz nazwisko nie powinno zawierać liczb', category='error')
+        return False
+    elif password1 != password2:
+        flash('Hasła nie są takie same', category='error')
+        return False
+    elif len(password1) < 8 or contains_a_number(password1) == False:
+        flash('Hasło powinno składać się z 8 znaków oraz zawierać co najmniej jedną liczbę', category='error')
+        return False
+    elif len(phone) != 9 or contains_a_character(phone):
+        flash('Numer telefonu powinien składać się z 9 cyfr', category='error')
+        return False
+    return True

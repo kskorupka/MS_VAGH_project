@@ -49,7 +49,7 @@ def sign_up():
     :return: html template of sign_up
     This function moves current_user to sign_up's part. User may sign up only if his email doesn't exist in DataBase.
     """
-    from .auxiliary_functions import contains_a_number, contains_a_character
+    from .auxiliary_functions import check_if_data_is_correct
 
     if request.method == 'POST':
 
@@ -65,19 +65,7 @@ def sign_up():
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Konto już istnieje.', category='error')
-        elif len(email) < 4 or email.find("@") == -1:
-            flash('Niepoprawny email', category='error')
-        elif len(first_name) < 3 or len(second_name) < 3:
-            flash('Imię oraz nazwisko powinno być dłuższe niż 1 litera', category='error')
-        elif contains_a_number(first_name) == True or contains_a_number(second_name) == True:
-            flash('Imię oraz nazwisko nie powinno zawierać liczb', category='error')
-        elif password1 != password2:
-            flash('Hasła nie są takie same', category='error')
-        elif len(password1) < 8 or contains_a_number(password1) == False:
-            flash('Hasło powinno składać się z 8 znaków oraz zawierać co najmniej jedną liczbę', category='error')
-        elif len(phone) != 9 or contains_a_character(phone):
-            flash('Numer telefonu powinien składać się z 9 cyfr', category='error')
-        else:
+        elif check_if_data_is_correct(email, first_name, second_name, password1, password2, phone):
 
             '''add user to DataBase'''
             new_user = User(email=email, password=generate_password_hash(password1, method='sha256'), name=first_name,
@@ -134,7 +122,7 @@ def return_item():
     :return: html template of return
     This function moves current_user to return's part. User may return an item only if he has a reservation.
     """
-    from .auxiliary_functions import check_if_user_has_reservation, add_to_history,get_rows
+    from .auxiliary_functions import check_if_user_has_reservation, add_to_history, get_rows
     from .models import Reservation, Location, Item
 
     '''get all important lists so User may access current data'''
