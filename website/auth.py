@@ -112,6 +112,7 @@ def rent():
 
         '''create new reservation'''
         perform_reservation(user_id, reservations, item_id)
+        return render_template("home.html", user=current_user)
     return render_template("rent.html", user=current_user, bikes=bikes, scooters=scooters, skateboards=skateboards)
 
 
@@ -171,6 +172,7 @@ def report():
         else:
             add_report(user_id=current_user.id, description=new_report)
             flash('Dziękujemy za zgłodzenie problemu')
+            return render_template("home.html", user=current_user)
     return render_template('report.html', user=current_user)
 
 
