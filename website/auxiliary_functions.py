@@ -144,3 +144,11 @@ def add_report(user_id, description):
 
     db.session.add(new_report)
     db.session.commit()
+
+
+def get_rows(table):
+    """
+    :param table: table to get data from
+    :return: list of rows from table
+    """
+    return table.query.all()

@@ -3,6 +3,24 @@ from flask_login import UserMixin
 
 
 class User(db.Model, UserMixin):
+    '''
+    A class used to represent User Table
+
+    Attributes
+    ----------
+    id : int
+        User's id in DataBase
+    email : str
+        unique User's email
+    password : str
+        User's password (length must be greater than 7 and contains at least one number)
+    name : str
+        User's name (cannot contain any number)
+    surname : str
+        User's surname (cannot contain any number)
+    phone : str
+        User's phone number (length must be 9 and cannot contain any letter)
+    '''
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
@@ -12,6 +30,24 @@ class User(db.Model, UserMixin):
 
 
 class History(db.Model):
+    '''
+    A class used to represent History Table
+
+    Attributes
+    ----------
+    historyID : int
+
+    userID : int
+
+    locationID : int
+
+    itemID : int
+
+    fromDate : DateTime
+
+    toDate : DateTime
+
+    '''
     historyID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'))
     locationID = db.Column(db.Integer, db.ForeignKey('location.locationID'))

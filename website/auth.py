@@ -99,12 +99,12 @@ def rent():
     This function moves current_user to rent's part. User may rent an item only if he doesn't have any reservations.
     """
     from .models import Item, Location, Reservation
-    from .auxiliary_functions import get_bikes, get_scooters, get_skateboards, perform_reservation
+    from .auxiliary_functions import get_bikes, get_scooters, get_skateboards, perform_reservation, get_rows
 
     '''get all important lists so User may access current data'''
-    reservations = Reservation.query.all()
-    locations = Location.query.all()
-    items = Item.query.all()
+    reservations = get_rows(Reservation)
+    locations = get_rows(Location)
+    items = get_rows(Item)
     bikes = get_bikes(items, locations, reservations)
     scooters = get_scooters(items, locations, reservations)
     skateboards = get_skateboards(items, locations, reservations)
@@ -114,7 +114,6 @@ def rent():
 
         item_type = request.form.get('type')
         user_id = current_user.id
-        reservations = Reservation.query.all()
 
         if item_type == 'Rower':
             item_id = request.form.get('bikes_available')
@@ -135,13 +134,13 @@ def return_item():
     :return: html template of return
     This function moves current_user to return's part. User may return an item only if he has a reservation.
     """
-    from .auxiliary_functions import check_if_user_has_reservation, add_to_history
+    from .auxiliary_functions import check_if_user_has_reservation, add_to_history,get_rows
     from .models import Reservation, Location, Item
 
     '''get all important lists so User may access current data'''
     user_id = current_user.id
-    reservations = Reservation.query.all()
-    locations = Location.query.all()
+    reservations = get_rows(Reservation)
+    locations = get_rows(Location)
 
     '''check if user may return anything'''
     if not check_if_user_has_reservation(user_id, reservations):
