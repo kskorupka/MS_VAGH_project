@@ -1,9 +1,8 @@
-{% extends "base.html" %}{% block title %}Rejestracja{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Rejestracja{% endblock %} {% block
+content %}
 <form method="POST">
-    <h3 align="center">Rejestracja</h3>
-    <div class="form-group">
+  <h3 align="center">Rejestracja</h3>
+  <div class="form-group">
         <label for="email">Email</label>
         <input
                 type="email"
@@ -53,7 +52,17 @@
                 placeholder="Podaj hasło jeszcze raz"
         />
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+    <div class="form-group">
+        <label for="phoneNumber">Nr telefonu</label>
+        <input
+                type="text"
+                class="form-control"
+                id="phoneNumber"
+                name="phoneNumber"
+                placeholder="Podaj swój numer telefonu"
+        />
+    </div>
+  <br />
+  <button type="submit" class="btn btn-primary">Zatwierdź</button>
 </form>
 {% endblock %}

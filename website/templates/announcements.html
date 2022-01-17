@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Ogłoszenia{% endblock %}
+
+{% block content %}
+<h1 align="center">Ogłoszenia</h1>
+    <ul class="list-group list-group-flush" id="announcements">
+    {% for announcement in announcements %}
+        <div class="post">
+            <h5 class="recent-post-title">{{ announcement.title }}</h5>
+            <li class="list-group-item">{{ announcement.content }}</li>
+        </div>
+    {% endfor %}
+    </ul>
+{% endblock %}

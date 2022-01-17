@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block title %}Wypożycz{% endblock %} {% block
+content %}
+    <form method="post">
+        <h3 align="center">Wybierz przedmiot do wypożyczenia</h3>
+        <label for="type">Sprzęt: </label>
+        <select name="type" onchange="showOffers(this.value)" id="type">
+            <option value="" selected disabled hidden>Wybierz pojazd</option> <!-- placeholder -->
+            <option value="Rower" type="item">Rower</option>
+            <option value="Hulajnoga" type="item">Hulajnoga</option>
+            <option value="Deskorolka" type="item">Deskorolka</option>
+        </select>
+
+        <div style="display: none;" id="bikes_available">
+            <label for="bikes_available">Rower: </label>
+            <select onchange="allowSubmit()" name="bikes_available">
+                <option value="" selected disabled hidden>Wybierz rower</option>
+                {% for bike in bikes %}
+                    <option value="{{bike.itemID[1]}}" type="bike">Rower{{ bike.itemID[0] }}: {{bike.location.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: none;" id="scooters_available">
+            <label for="scooters_available">Hulajnoga: </label>
+            <select onchange="allowSubmit()" name="scooters_available">
+                <option value="" selected disabled hidden>Wybierz hulajnogę</option>
+                {% for scooter in scooters %}
+                    <option value="{{scooter.itemID[1]}}">Hulajnoga{{ scooter.itemID[0] }}: {{scooter.location.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+     <div style="display: none;" id="skateboards_available">
+            <label for="skateboards_available">Deskorolka: </label>
+            <select onchange="allowSubmit()" name="skateboards_available">
+                <option value="" selected disabled hidden>Wybierz deskorolkę</option>
+                {% for skateboard in skateboards %}
+                    <option value="{{skateboard.itemID[1]}}">Deskorolka{{ skateboard.itemID[0] }}: {{skateboard.location.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input type="submit" value="Wypożycz" id="submit" style="display: none;">
+    </form>
+
+    <script>
+        function showOffers(value) {
+            if (value === "Rower") {
+                document.getElementById("bikes_available").style.display = "block";
+                document.getElementById("scooters_available").style.display = "none";
+                document.getElementById("skateboards_available").style.display = "none";
+            } else if (value === "Hulajnoga") {
+                document.getElementById("bikes_available").style.display = "none";
+                document.getElementById("scooters_available").style.display = "block";
+                document.getElementById("skateboards_available").style.display = "none";
+            } else if (value === "Deskorolka") {
+                document.getElementById("bikes_available").style.display = "none";
+                document.getElementById("scooters_available").style.display = "none";
+                document.getElementById("skateboards_available").style.display = "block";
+            }
+        }
+
+        function allowSubmit() {
+            document.getElementById("submit").style.display = "block";
+        }
+    </script>
+{% endblock %}
